@@ -2,13 +2,7 @@ package com.netcracker.vectors;
 import java.util.*;
 import java.io.*;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Rimma
- * Date: 24.10.13
- * Time: 13:46
- * To change this template use File | Settings | File Templates.
- */
+
 public class LinkedListVector implements Vector,Cloneable{
     public int k = 0;
     private Link head;
@@ -25,13 +19,13 @@ public class LinkedListVector implements Vector,Cloneable{
     }
 
     public void addLink(double newValue) {
-        if (k == 0) {
+        if (getSize() == 0) {
             Link first = new Link(newValue);
             head = first;
             tail = first;
             k++;
         } else {
-            if (k == 1) {
+            if (getSize() == 1) {
                 Link second = new Link(newValue);
                 second.prev = tail;
                 second.next = head;
@@ -52,10 +46,13 @@ public class LinkedListVector implements Vector,Cloneable{
     }
 
     public void deleteLink(){
-        if (k==0)
-            return;
-        else{
-            if (k==1){
+        if (getSize()==0)
+        {
+            throw new NoSuchElementException();
+        }
+        else
+        {
+            if (getSize()==1){
                 head=null;
                 tail=null;
                 k--;
@@ -64,21 +61,25 @@ public class LinkedListVector implements Vector,Cloneable{
                 tail=tail.prev;
                 tail.next=head;
                 k--;
-
             }
         }
+
     }
 
     public double getElement(int i) {
+        if (0 > i && i < getSize()) {
         Link t = head;
         for (int j = 0; j < i; j++) {
             t = t.next;
         }
         return t.value;
+        }else {
+            throw new VectorIndexOutOfBoundsException();
+        }
     }
 
     public void setElement(int i, double newValue) {
-        if(i<k){
+        if(0 > i && i < getSize()){
         Link t = head;
         for (int j = 0; j < i; j++) {
             t = t.next;
@@ -86,7 +87,7 @@ public class LinkedListVector implements Vector,Cloneable{
         t.value = newValue;
         }
         else{
-           System.out.println("Your can't set element with this index "+i+" Size of vector is "+getSize());
+           throw new VectorIndexOutOfBoundsException();
         }
     }
 
@@ -105,55 +106,66 @@ public class LinkedListVector implements Vector,Cloneable{
         }
     }
 
-    public void populateWithArray(double[] array) {
+    public void populateWithArray(double[] array) throws IncompatibleVectorSizesException{
+        if (array != null) {
         if (this.getSize() == array.length) {
             for (int i = 0; i < this.getSize(); i++) {
                 setElement(i, array[i]);
             }
         } else {
-            System.out.println("You can't do this, because array doesn't fit to vector's size!");
+            throw new IncompatibleVectorSizesException();
+        }
         }
     }
 
-    public void populateWithObject(Vector obj) {
+    public void populateWithObject(Vector obj) throws IncompatibleVectorSizesException{
+        if (obj != null) {
         if (this.getSize() == obj.getSize()) {
             for (int i = 0; i < this.getSize(); i++) {
                 setElement(i, obj.getElement(i));
             }
         } else {
-            System.out.println("You can't do this, because objects have different size!");
+            throw new IncompatibleVectorSizesException();
         }
     }
+    }
 
-    public void add(Vector obj) {
+    public void add(Vector obj) throws IncompatibleVectorSizesException {
 
-
+        if (obj != null) {
         if (this.getSize() == obj.getSize()) {
             for (int i = 0; i < this.getSize(); i++) {
                 setElement(i, this.getElement(i) + obj.getElement(i));
             }
         } else
-            System.out.println("Vectors have different size, you can't add them!");
+            throw new IncompatibleVectorSizesException();
 
     }
+    }
 
-    public boolean compare(Vector obj) {
-        if (this.getSize() == obj.getSize()) {
-            boolean dif = false;
-            for (int i = 0; i < this.getSize(); i++) {
-                if (this.getElement(i)!= obj.getElement(i)) {
-                    dif = true;
-                    break;
+    public boolean compare(Vector obj) throws IncompatibleVectorSizesException {
+        if (obj != null) {
+            if (this.getSize() == obj.getSize()) {
+                boolean dif = false;
+                for (int i = 0; i < this.getSize(); i++) {
+                    if (this.getElement(i) != obj.getElement(i)) {
+                        dif = true;
+                        break;
+                    }
                 }
+                if (dif == false) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                throw new IncompatibleVectorSizesException();
             }
-            if (dif == false)
-                System.out.println("Vectors are equal!");
-            else
-                System.out.println("Vectors have different elements!");
         } else {
-            System.out.println("Vectors have different size!");
+            return false;
         }
     }
+
     public String toString() {
         String s = new String();
         StringBuffer sb = new StringBuffer("List-vector consists from " + this.getSize() + " elements and its elements are:");
@@ -163,13 +175,14 @@ public class LinkedListVector implements Vector,Cloneable{
         s = sb.toString();
         return s;
     }
+
     public boolean equals(Object obj) {
         if (obj instanceof Vector) {
             try {
                 return this.compare((Vector) obj);
             } catch (IncompatibleVectorSizesException e) {
                 e.printStackTrace();
-                return  false;
+                return false;
             }
         } else {
             return false;
@@ -184,13 +197,8 @@ public class LinkedListVector implements Vector,Cloneable{
         }
         return result;
     }
-    public LinkedListVector clone (){
-        LinkedListVector newObject= null;
-        try {
-            newObject = (LinkedListVector) super.clone();
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
+    public LinkedListVector clone ()throws CloneNotSupportedException{
+        LinkedListVector newObject=(LinkedListVector) super.clone();
         newObject.k=0;
         newObject.head=null;
         newObject.tail=null;
@@ -217,21 +225,31 @@ public class LinkedListVector implements Vector,Cloneable{
         return new MyIterator();
     }
     class MyIterator implements Iterator<Double> {
-        private int count=0;
+        private int count = 0;
+
         public boolean hasNext() {
-            if(count <getSize()) return true;
-            return false;
+            if (count < getSize()) {
+                return true;
+            }
+            else {
+                return false;
+            }
+
         }
+
         public Double next() {
-            if(count ==getSize())
+            if (count == getSize())
+            {
                 throw new NoSuchElementException();
-
-            count++;
-            return getElement(count-1);
+            }
+            else {
+                count++;
+                return getElement(count - 1);
+            }
 
         }
 
-        public void remove () {
+        public void remove() throws UnsupportedOperationException {
             throw new UnsupportedOperationException();
         }
     }

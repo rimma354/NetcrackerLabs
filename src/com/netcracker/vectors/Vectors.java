@@ -3,14 +3,6 @@ package com.netcracker.vectors;
 import java.util.*;
 import java.io.*;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Rimma
- * Date: 24.10.13
- * Time: 13:45
- * To change this template use File | Settings | File Templates.
- */
-
 public class Vectors {
 
     private static VectorFactory currentVectorFactory = new ArrayVectorFactory();
@@ -112,22 +104,31 @@ public class Vectors {
         return m;
     }
 
-    static Vector add(Vector obj1, Vector obj2) {
-        Vector ad = createInstance(obj1.getSize());
+    static Vector add(Vector obj1, Vector obj2) throws IncompatibleVectorSizesException{
 
-        if (obj1.getSize() == obj2.getSize()) {
-            for (int i = 0; i < obj1.getSize(); i++) {
-                ad.setElement(i, obj1.getElement(i) + obj2.getElement(i));
+
+        if ((obj1!=null)&&(obj2!=null)){
+            Vector ad = createInstance(obj1.getSize());
+            if (obj1.getSize() == obj2.getSize()) {
+                for (int i = 0; i < obj1.getSize(); i++) {
+                    ad.setElement(i, obj1.getElement(i) + obj2.getElement(i));
+                }
+                return ad;
+            } else
+            {
+                throw new IncompatibleVectorSizesException();
             }
-        } else
-            System.out.println("Vectors have different size, you can't add them!");
-        return ad;
-    }
+        }
+        else {
+            throw new IllegalArgumentException();
+        }
+
+        }
+
 
     static Vector sort(Vector obj) {
+       if (obj!=null){
         Vector s = createInstance(obj.getSize());
-
-       // s.populateWithObject(obj);
         for (int i = 0; i < s.getSize(); i++) {
             int minIndex = i;
             for (int j = i + 1; j < s.getSize(); j++) {
@@ -142,4 +143,9 @@ public class Vectors {
         }
         return s;
     }
+        else {
+           throw new IllegalArgumentException();
+       }
+
+}
 }

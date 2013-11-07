@@ -3,22 +3,12 @@ package com.netcracker.vectors;
 import java.util.*;
 import java.io.*;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Rimma
- * Date: 24.10.13
- * Time: 13:47
- * To change this template use File | Settings | File Templates.
- */
-
 public class ArrayVector implements Vector, Cloneable {
     public double[] elements;
 
-
     public ArrayVector(int newSize) {
         this.elements = new double[newSize];
-
-    }
+     }
 
     public ArrayVector(double... value) {
         this.elements = new double[value.length];
@@ -131,7 +121,6 @@ public class ArrayVector implements Vector, Cloneable {
     }
 
     public boolean equals(Object obj) {
-
         if (obj instanceof Vector) {
             try {
                 return this.compare((Vector) obj);
@@ -142,7 +131,6 @@ public class ArrayVector implements Vector, Cloneable {
         } else {
             return false;
         }
-
     }
 
     public int hashCode() {
@@ -154,11 +142,8 @@ public class ArrayVector implements Vector, Cloneable {
         return result;
     }
 
-    public ArrayVector clone() throws  CloneNotSupportedException{
-        ArrayVector newObject = null;
-
-            newObject = (ArrayVector) super.clone();
-
+    public ArrayVector clone() throws CloneNotSupportedException {
+        ArrayVector newObject = (ArrayVector) super.clone();
         newObject.elements = this.elements.clone();
         return newObject;
     }
@@ -172,20 +157,28 @@ public class ArrayVector implements Vector, Cloneable {
         private int count = 0;
 
         public boolean hasNext() {
-            if (count < getSize()) return true;
-            return false;
+            if (count < getSize()) {
+                return true;
+            }
+            else {
+                return false;
+            }
+
         }
 
         public Double next() {
             if (count == getSize())
+            {
                 throw new NoSuchElementException();
-
+            }
+            else {
             count++;
             return getElement(count - 1);
+            }
 
         }
 
-        public void remove() throws UnsupportedOperationException{
+        public void remove() throws UnsupportedOperationException {
             throw new UnsupportedOperationException();
         }
     }

@@ -33,10 +33,20 @@ public class JArrayListVector implements Vector, Cloneable{
         return this.elements.size();
     }
     public double getElement(int i){
+        if (0 > i && i < getSize()) {
         return this.elements.get(i);
     }
+        else {
+            throw new VectorIndexOutOfBoundsException();
+        }
+    }
     public void setElement(int i, double newValue) {
-        this.elements.set(i,newValue);
+        if (0 > i && i < getSize()) {
+            this.elements.set(i,newValue);
+        }
+        else {
+            throw new VectorIndexOutOfBoundsException();
+        }
     }
     public void print() {
         for (int i = 0; i < this.getSize(); i++) {
@@ -44,94 +54,93 @@ public class JArrayListVector implements Vector, Cloneable{
         }
     }
 
-    public void populateWithArray(double[] array) {
-        if (this.getSize() == array.length) {
-            for (int i = 0; i < this.getSize(); i++)
-                setElement(i,array[i]);
-        } else {
-            System.out.println("You can't do this, because array doesn't fit to vector's size!");
-        }
-    }
-    public void populateWithObject(Vector obj) {
-        if (this.getSize() == obj.getSize()) {
-            for (int i = 0; i < this.getSize(); i++) {
-                setElement(i, obj.getElement(i));
+    public void populateWithArray(double[] array)throws IncompatibleVectorSizesException {
+        if (array != null) {
+            if (this.getSize() == array.length) {
+                for (int i = 0; i < this.getSize(); i++)
+                    setElement(i,array[i]);
+            } else {
+                throw new IncompatibleVectorSizesException();
             }
-        } else {
-            System.out.println("You can't do this, because objects have different size!");
         }
     }
-
-
-    public void compare(Vector obj) {
-        if (this.getSize() == obj.getSize()) {
-            boolean dif = false;
-            for (int i = 0; i < this.getSize(); i++) {
-                if (this.getElement(i) != obj.getElement(i)) {
-                    dif = true;
-                    break;
+    public void populateWithObject(Vector obj) throws IncompatibleVectorSizesException{
+        if (obj != null) {
+            if (this.getSize() == obj.getSize()) {
+                for (int i = 0; i < this.getSize(); i++) {
+                    setElement(i, obj.getElement(i));
                 }
+            } else {
+                throw new IncompatibleVectorSizesException();
             }
-            if (dif == false)
-                System.out.println("Vectors are equal!");
-            else
-                System.out.println("Vectors have different elements!");
-        } else {
-            System.out.println("Vectors have different size!");
         }
     }
+
+
+    public boolean compare(Vector obj) throws IncompatibleVectorSizesException {
+        if (obj != null) {
+            if (this.getSize() == obj.getSize()) {
+                boolean dif = false;
+                for (int i = 0; i < this.getSize(); i++) {
+                    if (this.getElement(i) != obj.getElement(i)) {
+                        dif = true;
+                        break;
+                    }
+                }
+                if (dif == false) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                throw new IncompatibleVectorSizesException();
+            }
+        } else {
+            return false;
+        }
+
+    }
+
     public void multiply(int x) {
 
         for (int i = 0; i < this.getSize(); i++)
             setElement(i, this.getElement(i) * x);
 
     }
-    public void add(Vector obj) {
-
+    public void add(Vector obj) throws IncompatibleVectorSizesException{
+        if (obj != null) {
         if (this.getSize() == obj.getSize()) {
             for (int i = 0; i < this.getSize(); i++) {
                 setElement(i, this.getElement(i) + obj.getElement(i));
             }
         } else
-            System.out.println("Vectors have different size, you can't add them!");
+        { throw new IncompatibleVectorSizesException();}
 
+    }
     }
     public String toString() {
         String s = new String();
-        StringBuffer sb = new StringBuffer("Array-vector consists from " + this.getSize() + " elements and its elements are:");
-        StringBuffer sb2 = new StringBuffer();
+        StringBuffer sb = new StringBuffer("Array-vector(collection) consists from " + this.getSize() + " elements and its elements are:");
+
         for (int i = 0; i < this.getSize(); i++)
-            sb2 = sb2.append(" ").append(this.getElement(i));
-        s = sb.append(sb2).toString();
+            sb = sb.append(" ").append(this.getElement(i));
+        s = sb.toString();
         return s;
     }
 
     public boolean equals(Object obj) {
         if (obj instanceof Vector) {
-            if (this.getSize() == ((Vector) obj).getSize()) {
-                boolean dif = false;
-                for (int i = 0; i < this.getSize(); i++) {
-                    if (this.getElement(i) != ((Vector) obj).getElement(i)) {
-                        dif = true;
-                        break;
-                    }
-                }
-                if (dif == false)  {
-                    System.out.println("Vectors are equal!");
-                    return true;
-                }else {
-                    System.out.println("Vectors have different elements!");
-                    return false;
-                } } else {
-                System.out.println("Vectors have different size!");
+            try {
+                return this.compare((Vector) obj);
+            } catch (IncompatibleVectorSizesException e) {
+                e.printStackTrace();
+                return false;
             }
-
         } else {
-            System.out.println("Different objects");
             return false;
         }
-        return false;
     }
+
     public int hashCode(){
         int result = 0;
         for (int i=0; i<this.getSize();i++) {
@@ -140,16 +149,9 @@ public class JArrayListVector implements Vector, Cloneable{
         }
         return result;
     }
-    public JArrayListVector clone(){
-        JArrayListVector newObject= null;
-        try {
-            newObject = (JArrayListVector) super.clone();
-            newObject.elements= (ArrayList) this.elements.clone();
-
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
-
+    public JArrayListVector clone()throws CloneNotSupportedException{
+        JArrayListVector newObject = (JArrayListVector) super.clone();
+        newObject.elements= (ArrayList) this.elements.clone();
         return newObject;
     }
 
@@ -157,21 +159,31 @@ public class JArrayListVector implements Vector, Cloneable{
         return new MyIterator();
     }
     class MyIterator implements Iterator<Double> {
-        private int count=0;
+        private int count = 0;
+
         public boolean hasNext() {
-            if(count <getSize()) return true;
-            return false;
+            if (count < getSize()) {
+                return true;
+            }
+            else {
+                return false;
+            }
+
         }
+
         public Double next() {
-            if(count ==getSize())
+            if (count == getSize())
+            {
                 throw new NoSuchElementException();
-
-            count++;
-            return getElement(count-1);
+            }
+            else {
+                count++;
+                return getElement(count - 1);
+            }
 
         }
 
-        public void remove () {
+        public void remove() throws UnsupportedOperationException {
             throw new UnsupportedOperationException();
         }
     }

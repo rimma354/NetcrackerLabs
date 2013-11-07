@@ -2,16 +2,9 @@ package com.netcracker.vectors;
 import java.util.*;
 import java.io.*;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Rimma
- * Date: 24.10.13
- * Time: 13:44
- * To change this template use File | Settings | File Templates.
- */
 public interface Vector extends Serializable,Iterable<Double> {
-    public void setElement(int i, double newValue);
-    public double getElement(int i);
+    public void setElement(int i, double newValue);// throws VectorIndexOutOfBoundsException
+    public double getElement(int i);              //  throws VectorIndexOutOfBoundsException
     public void print();
     public int getSize();
     public void populateWithArray(double[] array)throws IncompatibleVectorSizesException;
