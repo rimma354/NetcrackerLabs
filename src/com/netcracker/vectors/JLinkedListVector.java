@@ -1,64 +1,68 @@
 package com.netcracker.vectors;
+
 import java.util.*;
-import java.io.*;
 
-
-public class JLinkedListVector implements Vector, Cloneable{
+public class JLinkedListVector implements Vector, Cloneable {
     private LinkedList<Double> elements;
 
 
     public JLinkedListVector(int newSize) {
-        elements=new LinkedList<Double>();
-        for (int i=0; i<newSize; i++){
-            this.elements.add(i,null);
+        elements = new LinkedList<Double>();
+        for (int i = 0; i < newSize; i++) {
+            this.elements.add(i, null);
         }
 
     }
-    public JLinkedListVector(double ...value) {
-        elements=new LinkedList<Double>();
-        for (int i=0; i<value.length; i++)  {
-            elements.add(i,value[i]);
+
+    public JLinkedListVector(double... value) {
+        elements = new LinkedList<Double>();
+        for (int i = 0; i < value.length; i++) {
+            elements.add(i, value[i]);
 
         }
     }
+
     public int getSize() {
         return this.elements.size();
     }
-    public double getElement(int i){
 
-        if (0 > i && i < getSize()) {
+    public double getElement(int i) {
+        if (0 <= i && i < getSize()) {
             return this.elements.get(i);
-        }   else {
+        } else {
             throw new VectorIndexOutOfBoundsException();
         }
-
     }
+
     public void setElement(int i, double newValue) {
-        if (0 > i && i < getSize()) {
-            this.elements.set(i,newValue);
-        }   else {
+        if (0 <= i && i < getSize()) {
+            this.elements.set(i, newValue);
+        } else {
             throw new VectorIndexOutOfBoundsException();
         }
-
     }
+
     public void print() {
         for (int i = 0; i < this.getSize(); i++) {
             System.out.println(this.elements.get(i));
         }
     }
 
-    public void populateWithArray(double[] array) throws IncompatibleVectorSizesException{
-        if (array != null) {
+    public void populateWithArray(double[] array) throws IncompatibleVectorSizesException {
+        try {
             if (this.getSize() == array.length) {
                 for (int i = 0; i < this.getSize(); i++)
-                    setElement(i,array[i]);
+                    setElement(i, array[i]);
             } else {
                 throw new IncompatibleVectorSizesException();
             }
+        } catch (NullPointerException e){
+            e.printStackTrace();
         }
     }
-    public void populateWithObject(Vector obj) throws IncompatibleVectorSizesException{
-        if (obj != null) {
+
+    public void populateWithObject(Vector obj) throws IncompatibleVectorSizesException {
+        try {
             if (this.getSize() == obj.getSize()) {
                 for (int i = 0; i < this.getSize(); i++) {
                     setElement(i, obj.getElement(i));
@@ -66,12 +70,14 @@ public class JLinkedListVector implements Vector, Cloneable{
             } else {
                 throw new IncompatibleVectorSizesException();
             }
+        } catch (NullPointerException e){
+            e.printStackTrace();
         }
     }
 
 
     public boolean compare(Vector obj) throws IncompatibleVectorSizesException {
-        if (obj != null) {
+        try {
             if (this.getSize() == obj.getSize()) {
                 boolean dif = false;
                 for (int i = 0; i < this.getSize(); i++) {
@@ -88,33 +94,34 @@ public class JLinkedListVector implements Vector, Cloneable{
             } else {
                 throw new IncompatibleVectorSizesException();
             }
-        } else {
+        } catch (NullPointerException e){
+            e.printStackTrace();
             return false;
         }
     }
 
     public void multiply(int x) {
-
         for (int i = 0; i < this.getSize(); i++)
             setElement(i, this.getElement(i) * x);
 
     }
-    public void add(Vector obj) throws IncompatibleVectorSizesException{
 
-        if (obj != null) {
+    public void add(Vector obj) throws IncompatibleVectorSizesException {
+        try {
             if (this.getSize() == obj.getSize()) {
                 for (int i = 0; i < this.getSize(); i++) {
                     setElement(i, this.getElement(i) + obj.getElement(i));
                 }
             } else
-                throw new  IncompatibleVectorSizesException();
+                throw new IncompatibleVectorSizesException();
+        } catch (NullPointerException e){
+            e.printStackTrace();
         }
-
     }
+
     public String toString() {
         String s = new String();
         StringBuffer sb = new StringBuffer("List-vector(collection) consists from " + this.getSize() + " elements and its elements are:");
-
         for (int i = 0; i < this.getSize(); i++)
             sb = sb.append(" ").append(this.getElement(i));
         s = sb.toString();
@@ -134,48 +141,46 @@ public class JLinkedListVector implements Vector, Cloneable{
         }
     }
 
-    public int hashCode(){
+    public int hashCode() {
         int result = 0;
-        for (int i=0; i<this.getSize();i++) {
+        for (int i = 0; i < this.getSize(); i++) {
             long b = Double.doubleToRawLongBits(this.getElement(i));
-            result ^= ((int)(b & 0x00000000FFFFFFFFL)) ^ ((int)((b & 0xFFFFFFFF00000000L) >> 32));
+            result ^= ((int) (b & 0x00000000FFFFFFFFL)) ^ ((int) ((b & 0xFFFFFFFF00000000L) >> 32));
         }
         return result;
     }
-    public JLinkedListVector clone()throws CloneNotSupportedException{
+
+    public JLinkedListVector clone() throws CloneNotSupportedException {
         JLinkedListVector newObject = (JLinkedListVector) super.clone();
-            newObject.elements=(LinkedList)this.elements.clone();
+        newObject.elements = (LinkedList) this.elements.clone();
         return newObject;
     }
+
     public Iterator iterator() {
         return new MyIterator();
     }
+
     class MyIterator implements Iterator<Double> {
         private int count = 0;
 
         public boolean hasNext() {
             if (count < getSize()) {
                 return true;
-            }
-            else {
+            } else {
                 return false;
             }
-
         }
 
         public Double next() {
-            if (count == getSize())
-            {
+            if (count == getSize()) {
                 throw new NoSuchElementException();
-            }
-            else {
+            } else {
                 count++;
                 return getElement(count - 1);
             }
-
         }
 
-        public void remove() throws UnsupportedOperationException {
+        public void remove() {
             throw new UnsupportedOperationException();
         }
     }

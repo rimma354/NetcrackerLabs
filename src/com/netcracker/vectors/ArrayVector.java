@@ -1,14 +1,13 @@
 package com.netcracker.vectors;
 
 import java.util.*;
-import java.io.*;
 
 public class ArrayVector implements Vector, Cloneable {
     public double[] elements;
 
     public ArrayVector(int newSize) {
         this.elements = new double[newSize];
-     }
+    }
 
     public ArrayVector(double... value) {
         this.elements = new double[value.length];
@@ -22,7 +21,7 @@ public class ArrayVector implements Vector, Cloneable {
     }
 
     public void setElement(int i, double newValue) {
-        if (0 > i && i < getSize()) {
+        if ((0 <= i) & (i < getSize())) {
             this.elements[i] = newValue;
         } else {
             throw new VectorIndexOutOfBoundsException();
@@ -30,7 +29,7 @@ public class ArrayVector implements Vector, Cloneable {
     }
 
     public double getElement(int i) {
-        if (0 > i && i < getSize()) {
+        if ((0 <= i) & (i < getSize())) {
             return this.elements[i];
         } else {
             throw new VectorIndexOutOfBoundsException();
@@ -44,7 +43,7 @@ public class ArrayVector implements Vector, Cloneable {
     }
 
     public void populateWithArray(double[] array) throws IncompatibleVectorSizesException {
-        if (array != null) {
+        try {
             if (this.getSize() == array.length) {
                 for (int i = 0; i < this.getSize(); i++) {
                     setElement(i, array[i]);
@@ -52,11 +51,13 @@ public class ArrayVector implements Vector, Cloneable {
             } else {
                 throw new IncompatibleVectorSizesException();
             }
+        } catch (NullPointerException e){
+            e.printStackTrace();
         }
     }
 
     public void populateWithObject(Vector obj) throws IncompatibleVectorSizesException {
-        if (obj != null) {
+        try {
             if (this.getSize() == obj.getSize()) {
                 for (int i = 0; i < this.getSize(); i++) {
                     setElement(i, obj.getElement(i));
@@ -64,11 +65,13 @@ public class ArrayVector implements Vector, Cloneable {
             } else {
                 throw new IncompatibleVectorSizesException();
             }
+        } catch (NullPointerException e){
+            e.printStackTrace();
         }
     }
 
     public boolean compare(Vector obj) throws IncompatibleVectorSizesException {
-        if (obj != null) {
+        try {
             if (this.getSize() == obj.getSize()) {
                 boolean dif = false;
                 for (int i = 0; i < this.getSize(); i++) {
@@ -85,35 +88,35 @@ public class ArrayVector implements Vector, Cloneable {
             } else {
                 throw new IncompatibleVectorSizesException();
             }
-        } else {
+        } catch (NullPointerException e){
+            e.printStackTrace();
             return false;
         }
     }
 
 
     public void multiply(int x) {
-
         for (int i = 0; i < this.getSize(); i++)
             setElement(i, this.getElement(i) * x);
-
     }
 
     public void add(Vector obj) throws IncompatibleVectorSizesException {
-        if (obj != null) {
+        try {
             if (this.getSize() == obj.getSize()) {
                 for (int i = 0; i < this.getSize(); i++) {
                     setElement(i, this.getElement(i) + obj.getElement(i));
                 }
-            } else
+            } else  {
                 throw new IncompatibleVectorSizesException();
+            }
+        } catch (NullPointerException e){
+            e.printStackTrace();
         }
-
     }
 
     public String toString() {
         String s = new String();
         StringBuffer sb = new StringBuffer("Array-vector consists from " + this.getSize() + " elements and its elements are:");
-
         for (int i = 0; i < this.getSize(); i++)
             sb = sb.append(" ").append(this.getElement(i));
         s = sb.toString();
@@ -148,7 +151,6 @@ public class ArrayVector implements Vector, Cloneable {
         return newObject;
     }
 
-
     public Iterator iterator() {
         return new MyIterator();
     }
@@ -159,26 +161,21 @@ public class ArrayVector implements Vector, Cloneable {
         public boolean hasNext() {
             if (count < getSize()) {
                 return true;
-            }
-            else {
+            } else {
                 return false;
             }
-
         }
 
         public Double next() {
-            if (count == getSize())
-            {
+            if (count == getSize()) {
                 throw new NoSuchElementException();
+            } else {
+                count++;
+                return getElement(count - 1);
             }
-            else {
-            count++;
-            return getElement(count - 1);
-            }
-
         }
 
-        public void remove() throws UnsupportedOperationException {
+        public void remove() {
             throw new UnsupportedOperationException();
         }
     }
