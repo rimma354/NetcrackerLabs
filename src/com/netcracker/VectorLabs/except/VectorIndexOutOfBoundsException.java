@@ -1,5 +1,4 @@
-package com.netcracker.vectors;
-
+package com.netcracker.VectorLabs.except;
 
 public class VectorIndexOutOfBoundsException extends IndexOutOfBoundsException {
     public VectorIndexOutOfBoundsException(String str){
@@ -12,3 +11,4 @@ public class VectorIndexOutOfBoundsException extends IndexOutOfBoundsException {
         return "VectorIndexOutOfBoundsException ";
     }
 }
+

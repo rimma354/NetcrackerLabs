@@ -1,6 +1,9 @@
-package com.netcracker.vectors;
+package com.netcracker.VectorLabs.pattern;
 
 import java.util.*;
+
+import com.netcracker.VectorLabs.except.*;
+import com.netcracker.VectorLabs.vector.Vector;
 
 public class JVectorAdapter implements Vector {
     java.util.Vector vector;

@@ -1,57 +1,56 @@
-package com.netcracker.vectors;
+package com.netcracker.VectorLabs.vector.impl;
 
 import java.util.*;
 
-public class JArrayListVector implements Vector, Cloneable {
-    private ArrayList<Double> elements;
+import com.netcracker.VectorLabs.except.*;
+import com.netcracker.VectorLabs.vector.Vector;
 
+public class ArrayVector implements Vector, Cloneable {
+    public double[] elements;
 
-    public JArrayListVector(int newSize) {
-        elements = new ArrayList<Double>();
-        for (int i = 0; i < newSize; i++) {
-            this.elements.add(i, null);
-        }
+    public ArrayVector(int newSize) {
+        this.elements = new double[newSize];
     }
 
-    public JArrayListVector(double... value) {
-        elements = new ArrayList<Double>();
+    public ArrayVector(double... value) {
+        this.elements = new double[value.length];
         for (int i = 0; i < value.length; i++) {
-            elements.add(i, null);
             setElement(i, value[i]);
         }
     }
 
     public int getSize() {
-        return this.elements.size();
+        return this.elements.length;
     }
 
-    public double getElement(int i) {
-        if (0 <= i && i < getSize()) {
-            return this.elements.get(i);
+    public void setElement(int i, double newValue) {
+        if ((0 <= i) & (i < getSize())) {
+            this.elements[i] = newValue;
         } else {
             throw new VectorIndexOutOfBoundsException();
         }
     }
 
-    public void setElement(int i, double newValue) {
-        if (0 <= i && i < getSize()) {
-            this.elements.set(i, newValue);
+    public double getElement(int i) {
+        if ((0 <= i) & (i < getSize())) {
+            return this.elements[i];
         } else {
             throw new VectorIndexOutOfBoundsException();
         }
     }
 
     public void print() {
-        for (int i = 0; i < this.getSize(); i++) {
-            System.out.println(this.elements.get(i));
+        for (double elem : elements) {
+            System.out.println(elem);
         }
     }
 
     public void populateWithArray(double[] array) throws IncompatibleVectorSizesException {
         try {
             if (this.getSize() == array.length) {
-                for (int i = 0; i < this.getSize(); i++)
+                for (int i = 0; i < this.getSize(); i++) {
                     setElement(i, array[i]);
+                }
             } else {
                 throw new IncompatibleVectorSizesException();
             }
@@ -73,7 +72,6 @@ public class JArrayListVector implements Vector, Cloneable {
             e.printStackTrace();
         }
     }
-
 
     public boolean compare(Vector obj) throws IncompatibleVectorSizesException {
         try {
@@ -99,6 +97,7 @@ public class JArrayListVector implements Vector, Cloneable {
         }
     }
 
+
     public void multiply(int x) {
         for (int i = 0; i < this.getSize(); i++)
             setElement(i, this.getElement(i) * x);
@@ -110,7 +109,7 @@ public class JArrayListVector implements Vector, Cloneable {
                 for (int i = 0; i < this.getSize(); i++) {
                     setElement(i, this.getElement(i) + obj.getElement(i));
                 }
-            } else {
+            } else  {
                 throw new IncompatibleVectorSizesException();
             }
         } catch (NullPointerException e){
@@ -120,7 +119,7 @@ public class JArrayListVector implements Vector, Cloneable {
 
     public String toString() {
         String s = new String();
-        StringBuffer sb = new StringBuffer("Array-vector(collection) consists from " + this.getSize() + " elements and its elements are:");
+        StringBuffer sb = new StringBuffer("Array-vector consists from " + this.getSize() + " elements and its elements are:");
         for (int i = 0; i < this.getSize(); i++)
             sb = sb.append(" ").append(this.getElement(i));
         s = sb.toString();
@@ -149,9 +148,9 @@ public class JArrayListVector implements Vector, Cloneable {
         return result;
     }
 
-    public JArrayListVector clone() throws CloneNotSupportedException {
-        JArrayListVector newObject = (JArrayListVector) super.clone();
-        newObject.elements = (ArrayList) this.elements.clone();
+    public ArrayVector clone() throws CloneNotSupportedException {
+        ArrayVector newObject = (ArrayVector) super.clone();
+        newObject.elements = this.elements.clone();
         return newObject;
     }
 
@@ -177,7 +176,6 @@ public class JArrayListVector implements Vector, Cloneable {
                 count++;
                 return getElement(count - 1);
             }
-
         }
 
         public void remove() {

@@ -1,7 +1,11 @@
-package com.netcracker.vectors;
+package com.netcracker.VectorLabs.vector;
 
 import java.util.*;
 import java.io.*;
+
+import com.netcracker.VectorLabs.except.*;
+import com.netcracker.VectorLabs.pattern.*;
+import com.netcracker.VectorLabs.pattern.factory.*;
 
 public class Vectors {
 

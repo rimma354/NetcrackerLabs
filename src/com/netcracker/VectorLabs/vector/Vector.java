@@ -1,7 +1,9 @@
-package com.netcracker.vectors;
+package com.netcracker.VectorLabs.vector;
 
 import java.util.*;
 import java.io.*;
+
+import com.netcracker.VectorLabs.except.*;
 
 public interface Vector extends Serializable, Iterable<Double> {
     public void setElement(int i, double newValue);

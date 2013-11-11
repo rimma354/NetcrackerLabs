@@ -1,73 +1,37 @@
-package com.netcracker.vectors;
+package com.netcracker.VectorLabs.vector.impl;
 
 import java.util.*;
-import java.io.*;
 
-public class LinkedListVector implements Vector, Cloneable {
-    public int k = 0;
-    private Link head;
-    private Link tail;
+import com.netcracker.VectorLabs.except.*;
+import com.netcracker.VectorLabs.vector.Vector;
 
-    public LinkedListVector(double... value) {
+public class JLinkedListVector implements Vector, Cloneable {
+    private LinkedList<Double> elements;
+
+
+    public JLinkedListVector(int newSize) {
+        elements = new LinkedList<Double>();
+        for (int i = 0; i < newSize; i++) {
+            this.elements.add(i, null);
+        }
+
+    }
+
+    public JLinkedListVector(double... value) {
+        elements = new LinkedList<Double>();
         for (int i = 0; i < value.length; i++) {
-            addLink(value[i]);
+            elements.add(i, value[i]);
+
         }
     }
 
     public int getSize() {
-        return this.k;
-    }
-
-    public void addLink(double newValue) {
-        if (getSize() == 0) {
-            Link first = new Link(newValue);
-            head = first;
-            tail = first;
-            k++;
-        } else {
-            if (getSize() == 1) {
-                Link second = new Link(newValue);
-                second.prev = tail;
-                second.next = head;
-                tail = second;
-                head.next = second;
-                head.prev = tail;
-                k++;
-            } else {
-                Link newLink = new Link(newValue);
-                tail.next = newLink;
-                newLink.prev = tail;
-                newLink.next = head;
-                tail = newLink;
-                head.prev = tail;
-                k++;
-            }
-        }
-    }
-
-    public void deleteLink() {
-        if (getSize() == 0) {
-            throw new NoSuchElementException();
-        } else {
-            if (getSize() == 1) {
-                head = null;
-                tail = null;
-                k--;
-            } else {
-                tail = tail.prev;
-                tail.next = head;
-                k--;
-            }
-        }
+        return this.elements.size();
     }
 
     public double getElement(int i) {
         if (0 <= i && i < getSize()) {
-            Link t = head;
-            for (int j = 0; j < i; j++) {
-                t = t.next;
-            }
-            return t.value;
+            return this.elements.get(i);
         } else {
             throw new VectorIndexOutOfBoundsException();
         }
@@ -75,35 +39,23 @@ public class LinkedListVector implements Vector, Cloneable {
 
     public void setElement(int i, double newValue) {
         if (0 <= i && i < getSize()) {
-            Link t = head;
-            for (int j = 0; j < i; j++) {
-                t = t.next;
-            }
-            t.value = newValue;
+            this.elements.set(i, newValue);
         } else {
             throw new VectorIndexOutOfBoundsException();
         }
     }
 
-    public void multiply(int x) {
-        for (int j = 0; j < this.getSize(); j++)
-            setElement(j, this.getElement(j) * x);
-    }
-
     public void print() {
-        Link t = head;
         for (int i = 0; i < this.getSize(); i++) {
-            System.out.println(t.value);
-            t = t.next;
+            System.out.println(this.elements.get(i));
         }
     }
 
     public void populateWithArray(double[] array) throws IncompatibleVectorSizesException {
         try {
             if (this.getSize() == array.length) {
-                for (int i = 0; i < this.getSize(); i++) {
+                for (int i = 0; i < this.getSize(); i++)
                     setElement(i, array[i]);
-                }
             } else {
                 throw new IncompatibleVectorSizesException();
             }
@@ -113,7 +65,7 @@ public class LinkedListVector implements Vector, Cloneable {
     }
 
     public void populateWithObject(Vector obj) throws IncompatibleVectorSizesException {
-       try {
+        try {
             if (this.getSize() == obj.getSize()) {
                 for (int i = 0; i < this.getSize(); i++) {
                     setElement(i, obj.getElement(i));
@@ -122,22 +74,10 @@ public class LinkedListVector implements Vector, Cloneable {
                 throw new IncompatibleVectorSizesException();
             }
         } catch (NullPointerException e){
-           e.printStackTrace();
-       }
-    }
-
-    public void add(Vector obj) throws IncompatibleVectorSizesException {
-        try {
-            if (this.getSize() == obj.getSize()) {
-                for (int i = 0; i < this.getSize(); i++) {
-                    setElement(i, this.getElement(i) + obj.getElement(i));
-                }
-            } else
-                throw new IncompatibleVectorSizesException();
-        } catch (NullPointerException e){
             e.printStackTrace();
         }
     }
+
 
     public boolean compare(Vector obj) throws IncompatibleVectorSizesException {
         try {
@@ -159,13 +99,32 @@ public class LinkedListVector implements Vector, Cloneable {
             }
         } catch (NullPointerException e){
             e.printStackTrace();
-            return  false;
+            return false;
+        }
+    }
+
+    public void multiply(int x) {
+        for (int i = 0; i < this.getSize(); i++)
+            setElement(i, this.getElement(i) * x);
+
+    }
+
+    public void add(Vector obj) throws IncompatibleVectorSizesException {
+        try {
+            if (this.getSize() == obj.getSize()) {
+                for (int i = 0; i < this.getSize(); i++) {
+                    setElement(i, this.getElement(i) + obj.getElement(i));
+                }
+            } else
+                throw new IncompatibleVectorSizesException();
+        } catch (NullPointerException e){
+            e.printStackTrace();
         }
     }
 
     public String toString() {
         String s = new String();
-        StringBuffer sb = new StringBuffer("List-vector consists from " + this.getSize() + " elements and its elements are:");
+        StringBuffer sb = new StringBuffer("List-vector(collection) consists from " + this.getSize() + " elements and its elements are:");
         for (int i = 0; i < this.getSize(); i++)
             sb = sb.append(" ").append(this.getElement(i));
         s = sb.toString();
@@ -194,28 +153,10 @@ public class LinkedListVector implements Vector, Cloneable {
         return result;
     }
 
-    public LinkedListVector clone() throws CloneNotSupportedException {
-        LinkedListVector newObject = (LinkedListVector) super.clone();
-        newObject.k = 0;
-        newObject.head = null;
-        newObject.tail = null;
-        for (int i = 0; i < this.k; i++) {
-            newObject.addLink(this.getElement(i));
-        }
+    public JLinkedListVector clone() throws CloneNotSupportedException {
+        JLinkedListVector newObject = (JLinkedListVector) super.clone();
+        newObject.elements = (LinkedList) this.elements.clone();
         return newObject;
-    }
-
-
-    class Link implements Serializable {
-        private Link prev;
-        private Link next;
-        private double value;
-
-        Link(double newValue) {
-            value = newValue;
-            prev = this;
-            next = this;
-        }
     }
 
     public Iterator iterator() {
@@ -246,4 +187,5 @@ public class LinkedListVector implements Vector, Cloneable {
             throw new UnsupportedOperationException();
         }
     }
+
 }

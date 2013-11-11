@@ -1,5 +1,7 @@
-package com.netcracker.vectors;
+package com.netcracker.VectorLabs.pattern.factory;
 
+import com.netcracker.VectorLabs.vector.*;
+import com.netcracker.VectorLabs.vector.impl.*;
 
 public class LinkedListVectorFactory implements VectorFactory {
     public Vector createVector() {
