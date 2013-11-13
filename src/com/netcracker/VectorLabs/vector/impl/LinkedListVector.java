@@ -5,17 +5,45 @@ import java.io.*;
 
 import com.netcracker.VectorLabs.except.*;
 import com.netcracker.VectorLabs.vector.Vector;
+import com.netcracker.VectorLabs.pattern.Observer;
 
 public class LinkedListVector implements Vector, Cloneable {
     public int k = 0;
     private Link head;
     private Link tail;
-
+    private ArrayList<Observer> observers;
+    
     public LinkedListVector(double... value) {
+    	observers = new ArrayList<Observer>();
         for (int i = 0; i < value.length; i++) {
             addLink(value[i]);
         }
+        notifyObjectChanged();
     }
+    
+    public void registerObserver(Observer obs){
+    	observers.add(obs);
+    }
+    
+    public void removeObserver(Observer obs){
+    	int i=observers.indexOf(obs);
+    	if(i>=0){
+    		observers.remove(i);
+    	}
+    }
+    
+    public void notifyElementChanged(int index) {
+		for (Observer obs:observers){
+			obs.elementChanged(index);
+		}
+	}
+
+
+	public void notifyObjectChanged() {
+		for (Observer obs:observers){
+			obs.objectChanged();
+		}
+	}
 
     public int getSize() {
         return this.k;
@@ -46,6 +74,7 @@ public class LinkedListVector implements Vector, Cloneable {
                 k++;
             }
         }
+        notifyObjectChanged();
     }
 
     public void deleteLink() {
@@ -61,6 +90,7 @@ public class LinkedListVector implements Vector, Cloneable {
                 tail.next = head;
                 k--;
             }
+            notifyObjectChanged();
         }
     }
 
@@ -83,14 +113,17 @@ public class LinkedListVector implements Vector, Cloneable {
                 t = t.next;
             }
             t.value = newValue;
+            notifyElementChanged(i);
         } else {
             throw new VectorIndexOutOfBoundsException();
         }
     }
 
     public void multiply(int x) {
-        for (int j = 0; j < this.getSize(); j++)
+        for (int j = 0; j < this.getSize(); j++){
             setElement(j, this.getElement(j) * x);
+        }
+        notifyObjectChanged();
     }
 
     public void print() {
@@ -107,6 +140,7 @@ public class LinkedListVector implements Vector, Cloneable {
                 for (int i = 0; i < this.getSize(); i++) {
                     setElement(i, array[i]);
                 }
+                notifyObjectChanged();
             } else {
                 throw new IncompatibleVectorSizesException();
             }
@@ -121,6 +155,7 @@ public class LinkedListVector implements Vector, Cloneable {
                 for (int i = 0; i < this.getSize(); i++) {
                     setElement(i, obj.getElement(i));
                 }
+                notifyObjectChanged();
             } else {
                 throw new IncompatibleVectorSizesException();
             }
@@ -135,6 +170,7 @@ public class LinkedListVector implements Vector, Cloneable {
                 for (int i = 0; i < this.getSize(); i++) {
                     setElement(i, this.getElement(i) + obj.getElement(i));
                 }
+                notifyObjectChanged();
             } else
                 throw new IncompatibleVectorSizesException();
         } catch (NullPointerException e){
@@ -249,4 +285,5 @@ public class LinkedListVector implements Vector, Cloneable {
             throw new UnsupportedOperationException();
         }
     }
+
 }

@@ -3,21 +3,50 @@ package com.netcracker.VectorLabs.vector.impl;
 import java.util.*;
 
 import com.netcracker.VectorLabs.except.*;
+import com.netcracker.VectorLabs.pattern.Observer;
 import com.netcracker.VectorLabs.vector.Vector;
 
 public class ArrayVector implements Vector, Cloneable {
-    public double[] elements;
+    private double[] elements;
+    private ArrayList<Observer> observers;
 
     public ArrayVector(int newSize) {
         this.elements = new double[newSize];
+        observers = new ArrayList<Observer>();
     }
 
     public ArrayVector(double... value) {
         this.elements = new double[value.length];
+        observers = new ArrayList<Observer>();
         for (int i = 0; i < value.length; i++) {
             setElement(i, value[i]);
         }
+        notifyObjectChanged();
     }
+    
+    public void registerObserver(Observer obs){
+    	observers.add(obs);
+    }
+    
+    public void removeObserver(Observer obs){
+    	int i=observers.indexOf(obs);
+    	if(i>=0){
+    		observers.remove(i);
+    	}
+    }
+    
+    public void notifyElementChanged(int index) {
+		for (Observer obs:observers){
+			obs.elementChanged(index);
+		}
+	}
+
+
+	public void notifyObjectChanged() {
+		for (Observer obs:observers){
+			obs.objectChanged();
+		}
+	}
 
     public int getSize() {
         return this.elements.length;
@@ -26,6 +55,7 @@ public class ArrayVector implements Vector, Cloneable {
     public void setElement(int i, double newValue) {
         if ((0 <= i) & (i < getSize())) {
             this.elements[i] = newValue;
+            notifyElementChanged(i);
         } else {
             throw new VectorIndexOutOfBoundsException();
         }
@@ -51,6 +81,7 @@ public class ArrayVector implements Vector, Cloneable {
                 for (int i = 0; i < this.getSize(); i++) {
                     setElement(i, array[i]);
                 }
+                notifyObjectChanged();
             } else {
                 throw new IncompatibleVectorSizesException();
             }
@@ -65,6 +96,7 @@ public class ArrayVector implements Vector, Cloneable {
                 for (int i = 0; i < this.getSize(); i++) {
                     setElement(i, obj.getElement(i));
                 }
+                notifyObjectChanged();
             } else {
                 throw new IncompatibleVectorSizesException();
             }
@@ -99,8 +131,10 @@ public class ArrayVector implements Vector, Cloneable {
 
 
     public void multiply(int x) {
-        for (int i = 0; i < this.getSize(); i++)
+        for (int i = 0; i < this.getSize(); i++){
             setElement(i, this.getElement(i) * x);
+        }
+        notifyObjectChanged();
     }
 
     public void add(Vector obj) throws IncompatibleVectorSizesException {
@@ -109,6 +143,7 @@ public class ArrayVector implements Vector, Cloneable {
                 for (int i = 0; i < this.getSize(); i++) {
                     setElement(i, this.getElement(i) + obj.getElement(i));
                 }
+                notifyObjectChanged();
             } else  {
                 throw new IncompatibleVectorSizesException();
             }
@@ -182,4 +217,5 @@ public class ArrayVector implements Vector, Cloneable {
             throw new UnsupportedOperationException();
         }
     }
+
 }

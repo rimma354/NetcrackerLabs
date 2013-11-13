@@ -4,14 +4,40 @@ import java.util.*;
 
 import com.netcracker.VectorLabs.except.*;
 import com.netcracker.VectorLabs.vector.Vector;
+import com.netcracker.VectorLabs.pattern.Observer;
 
 public class JVectorAdapter implements Vector {
     java.util.Vector vector;
+    private ArrayList<Observer> observers;
 
     public JVectorAdapter(java.util.Vector vector){
         this.vector=vector;
+        observers = new ArrayList<Observer>();
     }
+    
+    public void registerObserver(Observer obs){
+        	observers.add(obs);
+    }
+    
+    public void removeObserver(Observer obs){
+    	int i=observers.indexOf(obs);
+    	if(i>=0){
+    		observers.remove(i);
+    	}
+    }
+    
+    public void notifyElementChanged(int index) {
+		for (Observer obs:observers){
+			obs.elementChanged(index);
+		}
+	}
 
+
+	public void notifyObjectChanged() {
+		for (Observer obs:observers){
+			obs.objectChanged();
+		}
+	}
     public void setElement(int i, double newValue){
        if (0 <= i && i < vector.size()) {
         vector.set(i,newValue);
@@ -134,4 +160,5 @@ public class JVectorAdapter implements Vector {
     public Vector clone() throws CloneNotSupportedException{
         return (Vector)vector.clone();
     }
+
 }

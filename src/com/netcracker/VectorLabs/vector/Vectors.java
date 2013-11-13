@@ -8,9 +8,11 @@ import com.netcracker.VectorLabs.pattern.*;
 import com.netcracker.VectorLabs.pattern.factory.*;
 
 public class Vectors {
-
+	public static Vector getProtectedVector(Vector vector){
+		return new ProtectedVector(vector);
+	}
+	
     public static Vector getAdaptedJVector(java.util.Vector jVector){
-
         Vector utilVectorAdapted=new JVectorAdapter(jVector);
         return  utilVectorAdapted;
 
@@ -71,7 +73,6 @@ public class Vectors {
             outw.flush();
         } catch (Exception ex) {
             System.out.println("Some error occurred!");
-
         }
     }
 
@@ -122,7 +123,6 @@ public class Vectors {
             e.printStackTrace();
             return null;
         }
-
     }
 
 
@@ -145,6 +145,5 @@ public class Vectors {
             e.printStackTrace();
             return null;
         }
-
     }
 }

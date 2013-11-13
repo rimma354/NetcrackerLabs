@@ -4,6 +4,7 @@ import java.util.*;
 import java.io.*;
 
 import com.netcracker.VectorLabs.except.*;
+import com.netcracker.VectorLabs.pattern.Observer;
 
 public interface Vector extends Serializable, Iterable<Double> {
     public void setElement(int i, double newValue);
@@ -33,4 +34,12 @@ public interface Vector extends Serializable, Iterable<Double> {
     public Iterator iterator();
 
     public Vector clone() throws CloneNotSupportedException;
+    
+    public void notifyElementChanged(int index);
+    
+    public void notifyObjectChanged();
+    
+    public void registerObserver(Observer obs);
+    
+    public void removeObserver(Observer obs);
 }
