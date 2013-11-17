@@ -18,7 +18,6 @@ public class LinkedListVector implements Vector, Cloneable {
         for (int i = 0; i < value.length; i++) {
             addLink(value[i]);
         }
-        notifyObjectChanged();
     }
     
     public void registerObserver(Observer obs){
@@ -124,14 +123,6 @@ public class LinkedListVector implements Vector, Cloneable {
             setElement(j, this.getElement(j) * x);
         }
         notifyObjectChanged();
-    }
-
-    public void print() {
-        Link t = head;
-        for (int i = 0; i < this.getSize(); i++) {
-            System.out.println(t.value);
-            t = t.next;
-        }
     }
 
     public void populateWithArray(double[] array) throws IncompatibleVectorSizesException {

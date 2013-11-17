@@ -7,7 +7,7 @@ import com.netcracker.VectorLabs.vector.Vector;
 import com.netcracker.VectorLabs.pattern.Observer;
 
 public class JVectorAdapter implements Vector {
-    java.util.Vector vector;
+    private java.util.Vector vector;
     private ArrayList<Observer> observers;
 
     public JVectorAdapter(java.util.Vector vector){
@@ -49,12 +49,6 @@ public class JVectorAdapter implements Vector {
 
     public double getElement(int i){
         return (Double)vector.get(i);
-    }
-
-    public void print(){
-        for (int i=0; i<this.getSize();i++) {
-            System.out.println(this.getElement(i));
-        }
     }
 
     public int getSize(){
@@ -157,8 +151,10 @@ public class JVectorAdapter implements Vector {
         return vector.iterator();
     }
 
-    public Vector clone() throws CloneNotSupportedException{
-        return (Vector)vector.clone();
+    public Object clone() throws CloneNotSupportedException{
+    	JVectorAdapter object = (JVectorAdapter)super.clone();
+        object.vector = (java.util.Vector)vector.clone();
+        return object;
     }
 
 }

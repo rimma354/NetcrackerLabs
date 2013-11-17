@@ -11,8 +11,6 @@ public interface Vector extends Serializable, Iterable<Double> {
 
     public double getElement(int i);
 
-    public void print();
-
     public int getSize();
 
     public void populateWithArray(double[] array) throws IncompatibleVectorSizesException;
@@ -33,7 +31,7 @@ public interface Vector extends Serializable, Iterable<Double> {
 
     public Iterator iterator();
 
-    public Vector clone() throws CloneNotSupportedException;
+    public Object clone() throws CloneNotSupportedException;
     
     public void notifyElementChanged(int index);
     
@@ -42,4 +40,6 @@ public interface Vector extends Serializable, Iterable<Double> {
     public void registerObserver(Observer obs);
     
     public void removeObserver(Observer obs);
+
+	
 }

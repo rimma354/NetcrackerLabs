@@ -42,21 +42,21 @@ public class TestArrayVector {
 	public void testSetElement() {
 		obj1.setElement(0,1);
 		obj2.setElement(0,10);
-		assertEquals(1,obj1.elements[0],0);
-		assertEquals(10,obj2.elements[0],0);
+		assertEquals(1,obj1.getElements()[0],0);
+		assertEquals(10,obj2.getElements()[0],0);
 	}
 	
 	@Test
 	public void testPopulateWithArray() throws IncompatibleVectorSizesException {
 		double[]ar={8,8,8,8};
 		obj1.populateWithArray(ar);
-		assertArrayEquals(ar, obj1.elements, 0);
+		assertArrayEquals(ar, obj1.getElements(), 0);
 	}
 	
 	@Test
 	public void testPopulateWithObject() throws IncompatibleVectorSizesException {
 		obj1.populateWithObject(obj2);
-		assertArrayEquals(obj2.elements, obj1.elements, 0);
+		assertArrayEquals(obj2.getElements(), obj1.getElements(), 0);
 	}
 	
 	@Test

@@ -22,9 +22,7 @@ public class JLinkedListVector implements Vector, Cloneable {
         elements = new LinkedList<Double>();
         for (int i = 0; i < value.length; i++) {
             elements.add(i, value[i]);
-            notifyElementChanged(i);
         }
-        notifyObjectChanged();
     }
     
     public void registerObserver(Observer obs){

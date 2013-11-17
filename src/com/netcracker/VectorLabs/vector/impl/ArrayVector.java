@@ -11,20 +11,28 @@ public class ArrayVector implements Vector, Cloneable {
     private ArrayList<Observer> observers;
 
     public ArrayVector(int newSize) {
-        this.elements = new double[newSize];
+        this.setElements(new double[newSize]);
         observers = new ArrayList<Observer>();
     }
 
     public ArrayVector(double... value) {
-        this.elements = new double[value.length];
+        this.setElements(new double[value.length]);
         observers = new ArrayList<Observer>();
         for (int i = 0; i < value.length; i++) {
             setElement(i, value[i]);
         }
-        notifyObjectChanged();
+      
     }
     
-    public void registerObserver(Observer obs){
+    public double[] getElements() {
+		return elements;
+	}
+
+	public void setElements(double[] elements) {
+		this.elements = elements;
+	}
+
+	public void registerObserver(Observer obs){
     	observers.add(obs);
     }
     
@@ -49,12 +57,12 @@ public class ArrayVector implements Vector, Cloneable {
 	}
 
     public int getSize() {
-        return this.elements.length;
+        return this.getElements().length;
     }
 
     public void setElement(int i, double newValue) {
         if ((0 <= i) & (i < getSize())) {
-            this.elements[i] = newValue;
+            this.getElements()[i] = newValue;
             notifyElementChanged(i);
         } else {
             throw new VectorIndexOutOfBoundsException();
@@ -63,15 +71,9 @@ public class ArrayVector implements Vector, Cloneable {
 
     public double getElement(int i) {
         if ((0 <= i) & (i < getSize())) {
-            return this.elements[i];
+            return this.getElements()[i];
         } else {
             throw new VectorIndexOutOfBoundsException();
-        }
-    }
-
-    public void print() {
-        for (double elem : elements) {
-            System.out.println(elem);
         }
     }
 
@@ -89,6 +91,7 @@ public class ArrayVector implements Vector, Cloneable {
             e.printStackTrace();
         }
     }
+    
 
     public void populateWithObject(Vector obj) throws IncompatibleVectorSizesException {
         try {
@@ -185,7 +188,7 @@ public class ArrayVector implements Vector, Cloneable {
 
     public ArrayVector clone() throws CloneNotSupportedException {
         ArrayVector newObject = (ArrayVector) super.clone();
-        newObject.elements = this.elements.clone();
+        newObject.setElements(this.getElements().clone());
         return newObject;
     }
 

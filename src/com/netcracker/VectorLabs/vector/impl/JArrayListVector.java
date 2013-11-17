@@ -23,9 +23,7 @@ public class JArrayListVector implements Vector, Cloneable {
         observers = new ArrayList<Observer>();
         for (int i = 0; i < value.length; i++) {
             elements.add(i, value[i]);
-            notifyElementChanged(i);
         }
-        notifyObjectChanged();
     }
     
     public void registerObserver(Observer obs){
@@ -69,12 +67,6 @@ public class JArrayListVector implements Vector, Cloneable {
             notifyElementChanged(i);
         } else {
             throw new VectorIndexOutOfBoundsException();
-        }
-    }
-
-    public void print() {
-        for (int i = 0; i < this.getSize(); i++) {
-            System.out.println(this.elements.get(i));
         }
     }
 
