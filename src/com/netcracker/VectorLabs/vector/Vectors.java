@@ -6,6 +6,7 @@ import java.io.*;
 import com.netcracker.VectorLabs.except.*;
 import com.netcracker.VectorLabs.pattern.*;
 import com.netcracker.VectorLabs.pattern.factory.*;
+import com.netcracker.VectorLabs.stream.SynchronizedVector;
 
 public class Vectors {
 	public static Vector getProtectedVector(Vector vector){
@@ -146,4 +147,8 @@ public class Vectors {
             return null;
         }
     }
+    
+    static public Vector synchronizedVector(Vector vector){
+        return new SynchronizedVector(vector); 
+     } 
 }

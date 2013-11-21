@@ -9,6 +9,10 @@ import com.netcracker.VectorLabs.pattern.Observer;
 public class JArrayListVector implements Vector, Cloneable {
     private ArrayList<Double> elements;
     private ArrayList<Observer> observers;
+    
+    public ArrayList<Double> getElements() {
+    	return elements;		
+	}
 
     public JArrayListVector(int newSize) {
         elements = new ArrayList<Double>();

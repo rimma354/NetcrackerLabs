@@ -9,14 +9,18 @@ import com.netcracker.VectorLabs.vector.Vector;
 public class ArrayVector implements Vector, Cloneable {
     private double[] elements;
     private ArrayList<Observer> observers;
+    
+    public double[] getElements() {
+		return elements;
+	}
 
     public ArrayVector(int newSize) {
-        this.setElements(new double[newSize]);
+        this.elements=new double[newSize];
         observers = new ArrayList<Observer>();
     }
 
     public ArrayVector(double... value) {
-        this.setElements(new double[value.length]);
+        this.elements=new double[value.length];
         observers = new ArrayList<Observer>();
         for (int i = 0; i < value.length; i++) {
             setElement(i, value[i]);
@@ -24,14 +28,6 @@ public class ArrayVector implements Vector, Cloneable {
       
     }
     
-    public double[] getElements() {
-		return elements;
-	}
-
-	public void setElements(double[] elements) {
-		this.elements = elements;
-	}
-
 	public void registerObserver(Observer obs){
     	observers.add(obs);
     }
@@ -62,7 +58,7 @@ public class ArrayVector implements Vector, Cloneable {
 
     public void setElement(int i, double newValue) {
         if ((0 <= i) & (i < getSize())) {
-            this.getElements()[i] = newValue;
+            this.elements[i] = newValue;
             notifyElementChanged(i);
         } else {
             throw new VectorIndexOutOfBoundsException();
@@ -71,7 +67,7 @@ public class ArrayVector implements Vector, Cloneable {
 
     public double getElement(int i) {
         if ((0 <= i) & (i < getSize())) {
-            return this.getElements()[i];
+            return this.elements[i];
         } else {
             throw new VectorIndexOutOfBoundsException();
         }
@@ -188,7 +184,7 @@ public class ArrayVector implements Vector, Cloneable {
 
     public ArrayVector clone() throws CloneNotSupportedException {
         ArrayVector newObject = (ArrayVector) super.clone();
-        newObject.setElements(this.getElements().clone());
+        newObject.elements=this.elements.clone();
         return newObject;
     }
 

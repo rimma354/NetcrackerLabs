@@ -9,6 +9,10 @@ import com.netcracker.VectorLabs.pattern.Observer;
 public class JLinkedListVector implements Vector, Cloneable {
     private LinkedList<Double> elements;
     private ArrayList<Observer> observers;
+    
+    public LinkedList<Double> getElements(){
+    	return elements;
+    }
 
     public JLinkedListVector(int newSize) {
         elements = new LinkedList<Double>();
