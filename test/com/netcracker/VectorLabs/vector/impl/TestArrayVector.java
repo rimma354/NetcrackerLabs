@@ -42,8 +42,8 @@ public class TestArrayVector {
 	public void testSetElement() {
 		obj1.setElement(0,1);
 		obj2.setElement(0,10);
-		assertEquals(1,obj1.getElements()[0],0);
-		assertEquals(10,obj2.getElements()[0],0);
+		assertEquals(1,obj1.getElement(0),0);
+		assertEquals(10,obj2.getElement(0),0);
 	}
 	
 	@Test
