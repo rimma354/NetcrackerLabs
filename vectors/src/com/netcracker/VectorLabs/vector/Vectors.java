@@ -50,7 +50,7 @@ public class Vectors {
 		} catch (IllegalAccessException ex) {
 			System.out.println("Метод недоступен");
 		} catch (IllegalArgumentException ex) {
-			return currentVectorFactory.createVectorWithSize(size);
+			return createInstance(size);
 		} catch (InvocationTargetException ex) {
 			System.out.println("При вызове возникло исключение");
 		} catch (NoSuchMethodException ex) {
@@ -127,7 +127,7 @@ public class Vectors {
 	}
 
 	static Vector multiply(Vector obj, int x) {
-		Vector m = createInstance(obj.getSize());
+		Vector m = createInstance(obj,obj.getSize());
 		for (int i = 0; i < obj.getSize(); i++) {
 			m.setElement(i, obj.getElement(i) * x);
 		}
@@ -137,7 +137,7 @@ public class Vectors {
 	static Vector add(Vector obj1, Vector obj2)
 			throws IncompatibleVectorSizesException {
 		try {
-			Vector ad = createInstance(obj1.getSize());
+			Vector ad = createInstance(obj1,obj1.getSize());
 			if (obj1.getSize() == obj2.getSize()) {
 				for (int i = 0; i < obj1.getSize(); i++) {
 					ad.setElement(i, obj1.getElement(i) + obj2.getElement(i));
@@ -154,7 +154,7 @@ public class Vectors {
 
 	static Vector sort(Vector obj) {
 		try {
-			Vector s = createInstance(obj.getSize());
+			Vector s = createInstance(obj, obj.getSize());
 			for (int i = 0; i < s.getSize(); i++) {
 				int minIndex = i;
 				for (int j = i + 1; j < s.getSize(); j++) {
